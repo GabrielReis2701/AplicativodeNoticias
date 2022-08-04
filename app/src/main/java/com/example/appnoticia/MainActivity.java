@@ -1,21 +1,21 @@
 package com.example.appnoticia;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.se.omapi.SEService;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.appnoticia.Models.NewsApiResponse;
 import com.example.appnoticia.Models.NewsHeadlines;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SelectListener, View.OnClickListener {
@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity implements SelectListener, V
     private final OnFetchDataListener <NewsApiResponse> listener = new OnFetchDataListener<NewsApiResponse>() {
         @Override
         public void onfetchData(List<NewsHeadlines> list, String message) {
-            if (list.isEmpty()){
+           list = new ArrayList<NewsHeadlines>();
+            if (!list.isEmpty()){
                 Toast.makeText(MainActivity.this, "Dados não encontrados!!!", Toast.LENGTH_SHORT).show();
             }else {
                 showNews(list);
