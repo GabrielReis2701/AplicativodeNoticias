@@ -94,7 +94,7 @@
         android:layout_height="wrap_content">
         <SearchView
             android:id="@+id/search_view"
-            android:defaultQueryHint="Procurando noticias..."
+            android:queryHint="Procurando noticias..."
             android:iconifiedByDefault="false"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
