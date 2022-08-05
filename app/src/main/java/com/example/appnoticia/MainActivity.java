@@ -1,21 +1,23 @@
 package com.example.appnoticia;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.appnoticia.Models.NewsApiResponse;
 import com.example.appnoticia.Models.NewsHeadlines;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SelectListener, View.OnClickListener {
@@ -31,7 +33,12 @@ public class MainActivity extends AppCompatActivity implements SelectListener, V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        RequestManager manager = new RequestManager(this);
+        manager.getNewsHeadlines(listener, "general", null);
+
         searchView = findViewById(R.id.search_view);
+        recyclerView = findViewById(R.id.recycle_main);
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -74,16 +81,15 @@ public class MainActivity extends AppCompatActivity implements SelectListener, V
         bt_7 = findViewById(R.id.btn_7);
         bt_7.setOnClickListener(this);
 
-        RequestManager manager = new RequestManager(this);
-        manager.getNewsHeadlines(listener, "general", null);
+
 
     }
 
     private final OnFetchDataListener <NewsApiResponse> listener = new OnFetchDataListener<NewsApiResponse>() {
         @Override
         public void onfetchData(List<NewsHeadlines> list, String message) {
-           list = new ArrayList<NewsHeadlines>();
-            if (!list.isEmpty()){
+           //list = new ArrayList<NewsHeadlines>();
+            if (list.isEmpty()){
                 Toast.makeText(MainActivity.this, "Dados não encontrados!!!", Toast.LENGTH_SHORT).show();
             }else {
                 showNews(list);
@@ -100,11 +106,9 @@ public class MainActivity extends AppCompatActivity implements SelectListener, V
 
 
     private void showNews(List<NewsHeadlines> list) {
-        recyclerView = findViewById(R.id.recycle_main);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         adapter = new CustomAdapter(this, list, this);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override

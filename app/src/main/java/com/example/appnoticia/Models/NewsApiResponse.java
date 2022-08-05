@@ -1,12 +1,13 @@
 package com.example.appnoticia.Models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsApiResponse  implements Serializable {
     String status;
     int totalResults;
-    List<NewsHeadlines> artigos;
+    List<NewsHeadlines> artigos = new ArrayList<>();
 
 
     public String getStatus() {

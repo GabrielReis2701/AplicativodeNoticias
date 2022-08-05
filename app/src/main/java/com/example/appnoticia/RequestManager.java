@@ -1,6 +1,7 @@
 package com.example.appnoticia;
 
 import android.content.Context;
+import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.core.location.LocationRequestCompat;
@@ -19,32 +20,34 @@ public class RequestManager {
     Context context;
 
 
-    Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/v2/").addConverterFactory(GsonConverterFactory.create()).build();
+    Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/v2/")
+            .addConverterFactory(GsonConverterFactory.create()).build();
 
     public void getNewsHeadlines(OnFetchDataListener listener, String category, String query){
 
         CallNewsApi callNewsApi = retrofit.create(CallNewsApi.class);
         Call<NewsApiResponse> call = callNewsApi.callHeadline("br", category, query, context.getString(R.string.api_key));
+                try{
+                    call.enqueue(new Callback<NewsApiResponse>() {
+                        @Override
+                        public void onResponse(Call<NewsApiResponse> call, Response<NewsApiResponse> response) {
+                            if(!response.isSuccessful()){
+                                Toast.makeText(context, "Error!!", Toast.LENGTH_SHORT).show();
+                            }else{
+                                        listener.onfetchData(response.body().getArtigos(), response.message());
+                            }
 
-        try{
-            call.enqueue(new Callback<NewsApiResponse>() {
-                @Override
-                public void onResponse(Call<NewsApiResponse> call, Response<NewsApiResponse> response) {
-                        if(!response.isSuccessful()){
-                            Toast.makeText(context, "Error!!", Toast.LENGTH_SHORT).show();
                         }
-                        listener.onfetchData(response.body().getArtigos(), response.message());
+                        @Override
+                        public void onFailure(Call<NewsApiResponse> call, Throwable t) {
+                            listener.onError("Falha no Requeste");
+
+                        }
+                    });
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
-                @Override
-                public void onFailure(Call<NewsApiResponse> call, Throwable t) {
-                    listener.onError("Falha no Requeste");
-
-                }
-            });
-        }catch (Exception erro){
-            erro.printStackTrace();
-        }
     }
 
 
